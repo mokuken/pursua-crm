@@ -186,9 +186,9 @@ export default function ClientsPage() {
 
   // Utility to format values
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-PH", {
       style: "currency",
-      currency: "USD",
+      currency: "PHP",
       maximumFractionDigits: 0,
     }).format(val);
   };
@@ -213,24 +213,7 @@ export default function ClientsPage() {
       {/* Main Content Canvas */}
       <main className="ml-[240px] min-h-screen bg-background w-[calc(100%-240px)] flex flex-col relative">
         <div className="pt-24 px-margin-desktop pb-12 w-full flex-1 max-w-container-max mx-auto space-y-6">
-          {/* Filter Section */}
-          <div className="flex items-end justify-end">
-            <div className="flex gap-2">
-            <button className="flex items-center gap-2 px-3 py-1.5 border border-outline-variant rounded hover:bg-surface-container transition-colors text-body-sm cursor-pointer">
-              <span className="material-symbols-outlined text-[18px]">
-                filter_list
-              </span>
-              <span>Filters</span>
-            </button>
-            <button className="flex items-center gap-2 px-3 py-1.5 border border-outline-variant rounded hover:bg-surface-container transition-colors text-body-sm cursor-pointer">
-              <span className="material-symbols-outlined text-[18px]">
-                download
-              </span>
-              <span>Export</span>
-            </button>
-          </div>
-        </div>
-
+        
         {/* Featured Clients Bento Grid */}
         <section className="grid grid-cols-3 gap-6">
           {/* Featured Card 1 */}
@@ -238,9 +221,8 @@ export default function ClientsPage() {
             ref={(el) => {
               glowRefs.current[0] = el;
             }}
-            className="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-300 group relative overflow-hidden cursor-default"
+            className="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-300 group cursor-default"
           >
-            <div className="absolute top-0 right-0 w-32 h-32 opacity-10 bg-gradient-to-bl from-primary to-transparent -mr-16 -mt-16 rounded-full pointer-events-none"></div>
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
@@ -253,10 +235,10 @@ export default function ClientsPage() {
                 </span>
               </div>
               <h3 className="font-headline-md text-headline-md text-primary">
-                Aether Systems
+                Lumos Grid
               </h3>
               <p className="text-on-surface-variant text-body-sm mt-1">
-                Aerospace &amp; Defense
+                Renewable Energy
               </p>
             </div>
             <div className="mt-6 flex items-center justify-between border-t border-outline-variant pt-4">
@@ -264,27 +246,19 @@ export default function ClientsPage() {
                 <p className="text-on-surface-variant text-[10px] uppercase font-label-caps">
                   Account Value
                 </p>
-                <p className="text-primary font-semibold">$1.2M</p>
+                <p className="text-primary font-semibold">₱840K</p>
               </div>
               <div className="flex -space-x-2">
                 <Image
                   alt="Contact"
                   className="h-6 w-6 rounded-full border border-background object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJflzGAmfyUA6-0enN5OZzduTyU6wm0RPJt6CYXrRMTp6Sjej0_Xb2UsUIQnq7dfKe1EzATsddTeQnlzdpjbjg1Xb-QyxCjphGQKMcSpOpiMajzVHjcOHfIp6NPzs0HZKIMFsY8xriI465XnBWTTV1LekVMuBgMc_Ck-h2QpbUc5_plO28JIWTEHZD3g_xpjAoAZw5qMgjdpyQXcLOjIx6iOQQtuuxhNK_H3Q_VA1TF9pkt_f5lFkqmuDYTqXyNp0KcaCBlGG0xok"
-                  width={24}
-                  height={24}
-                  unoptimized
-                />
-                <Image
-                  alt="Contact"
-                  className="h-6 w-6 rounded-full border border-background object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbkMQbE-PgHL-22IZcwAueF3ApUu3Y_6-BAYanSicVsJPHZJyfZiLJ5rMCqzyqV9A1dSBz0VEc1XNxDIEqdzagVXGNm9qCJPEVpASqLzY_5f2tiKCIC7JXNWYYtDK1rO22OsL0UVIr4QpFBM4zyX9jxvp42dXNc8-KwYWEJ0QLtKNpeoViVaqfkpZ4liqHVw9AsNvipOvxd6KT9rvLGxKjuhuph-70R3AR_hvvFRr6CGg5kp1e7LdsdbS6mz7R9i0UdPpQt7C4ui8"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHw91rVA4tXNeHndD1yUqrfydNgCOEh1ohKb4HlcyT94nZtDdawpEC-FfuS107xMGl39DWW50CNMQv0YmRalvTvWxPsRAwTlh-pcBO5haXaFPVz69KduPLx6XzjRN28FwBvhDqCR7CYWv6lnYybt6lgV5C_zSkSIFLYfaRd1ZtSrYp80kfwKNItIMJBuvZUQl8YCCWWlk_knfJYHGTTlMVmWEAxSuEGeQBU6S8F1EljBYZ1v_RMMWdbHhti_ikZPWCCnaKdyyq_kg"
                   width={24}
                   height={24}
                   unoptimized
                 />
                 <div className="h-6 w-6 rounded-full bg-surface-container-highest border border-background flex items-center justify-center text-[8px] text-primary">
-                  +2
+                  +1
                 </div>
               </div>
             </div>
@@ -320,7 +294,7 @@ export default function ClientsPage() {
                 <p className="text-on-surface-variant text-[10px] uppercase font-label-caps">
                   Account Value
                 </p>
-                <p className="text-primary font-semibold">$840K</p>
+                <p className="text-primary font-semibold">₱840K</p>
               </div>
               <div className="flex -space-x-2">
                 <Image
@@ -368,7 +342,7 @@ export default function ClientsPage() {
                 <p className="text-on-surface-variant text-[10px] uppercase font-label-caps">
                   Account Value
                 </p>
-                <p className="text-primary font-semibold">$312K</p>
+                <p className="text-primary font-semibold">₱312K</p>
               </div>
               <div className="flex -space-x-2">
                 <Image
@@ -449,22 +423,14 @@ export default function ClientsPage() {
                                 <div className="text-primary font-medium">
                                   {client.name}
                                 </div>
-                                <div className="text-[11px] text-on-surface-variant">
-                                  Last contact: {client.lastContact}
-                                </div>
                               </div>
                             </div>
                           </td>
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-2">
-                              <Image
-                                alt={client.contactName}
-                                className="h-6 w-6 rounded-full object-cover"
-                                src={client.contactAvatar}
-                                width={24}
-                                height={24}
-                                unoptimized
-                              />
+                              <span className="material-symbols-outlined text-primary text-[18px]">
+                                person
+                              </span>
                               <span className="text-on-surface text-body-sm">
                                 {client.contactName}
                               </span>
@@ -485,7 +451,7 @@ export default function ClientsPage() {
                               {client.status}
                             </span>
                           </td>
-                          <td className="px-5 py-4 text-right font-label-caps text-primary">
+                          <td className="px-5 py-4 text-right text-primary font-semibold">
                             {formatCurrency(client.value)}
                           </td>
                         </tr>
@@ -526,15 +492,10 @@ export default function ClientsPage() {
             <div className="bg-surface-container-low border border-outline-variant rounded-xl p-5">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-lg bg-primary flex items-center justify-center overflow-hidden">
-                    <Image
-                      alt={activeClient.name}
-                      className="w-full h-full object-cover"
-                      src={activeClient.insightAvatar}
-                      width={56}
-                      height={56}
-                      unoptimized
-                    />
+                  <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+                    <span className="material-symbols-outlined text-primary">
+                      person
+                    </span>
                   </div>
                   <div>
                     <h3 className="text-primary font-bold text-headline-md">
