@@ -143,7 +143,7 @@ export default function ClientsPage() {
   ];
 
   // States
-  const [clients, setClients] = useState<Client[]>(initialClients);
+  const [clients] = useState<Client[]>(initialClients);
   const [selectedClientId, setSelectedClientId] = useState<string>("nebula-softworks");
   const [searchQuery, setSearchQuery] = useState("");
 
