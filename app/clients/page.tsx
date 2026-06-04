@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
@@ -267,15 +268,21 @@ export default function ClientsPage() {
                 <p className="text-primary font-semibold">$1.2M</p>
               </div>
               <div className="flex -space-x-2">
-                <img
+                <Image
                   alt="Contact"
                   className="h-6 w-6 rounded-full border border-background object-cover"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJflzGAmfyUA6-0enN5OZzduTyU6wm0RPJt6CYXrRMTp6Sjej0_Xb2UsUIQnq7dfKe1EzATsddTeQnlzdpjbjg1Xb-QyxCjphGQKMcSpOpiMajzVHjcOHfIp6NPzs0HZKIMFsY8xriI465XnBWTTV1LekVMuBgMc_Ck-h2QpbUc5_plO28JIWTEHZD3g_xpjAoAZw5qMgjdpyQXcLOjIx6iOQQtuuxhNK_H3Q_VA1TF9pkt_f5lFkqmuDYTqXyNp0KcaCBlGG0xok"
+                  width={24}
+                  height={24}
+                  unoptimized
                 />
-                <img
+                <Image
                   alt="Contact"
                   className="h-6 w-6 rounded-full border border-background object-cover"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbkMQbE-PgHL-22IZcwAueF3ApUu3Y_6-BAYanSicVsJPHZJyfZiLJ5rMCqzyqV9A1dSBz0VEc1XNxDIEqdzagVXGNm9qCJPEVpASqLzY_5f2tiKCIC7JXNWYYtDK1rO22OsL0UVIr4QpFBM4zyX9jxvp42dXNc8-KwYWEJ0QLtKNpeoViVaqfkpZ4liqHVw9AsNvipOvxd6KT9rvLGxKjuhuph-70R3AR_hvvFRr6CGg5kp1e7LdsdbS6mz7R9i0UdPpQt7C4ui8"
+                  width={24}
+                  height={24}
+                  unoptimized
                 />
                 <div className="h-6 w-6 rounded-full bg-surface-container-highest border border-background flex items-center justify-center text-[8px] text-primary">
                   +2
@@ -317,10 +324,13 @@ export default function ClientsPage() {
                 <p className="text-primary font-semibold">$840K</p>
               </div>
               <div className="flex -space-x-2">
-                <img
+                <Image
                   alt="Contact"
                   className="h-6 w-6 rounded-full border border-background object-cover"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHw91rVA4tXNeHndD1yUqrfydNgCOEh1ohKb4HlcyT94nZtDdawpEC-FfuS107xMGl39DWW50CNMQv0YmRalvTvWxPsRAwTlh-pcBO5haXaFPVz69KduPLx6XzjRN28FwBvhDqCR7CYWv6lnYybt6lgV5C_zSkSIFLYfaRd1ZtSrYp80kfwKNItIMJBuvZUQl8YCCWWlk_knfJYHGTTlMVmWEAxSuEGeQBU6S8F1EljBYZ1v_RMMWdbHhti_ikZPWCCnaKdyyq_kg"
+                  width={24}
+                  height={24}
+                  unoptimized
                 />
                 <div className="h-6 w-6 rounded-full bg-surface-container-highest border border-background flex items-center justify-center text-[8px] text-primary">
                   +1
@@ -362,15 +372,21 @@ export default function ClientsPage() {
                 <p className="text-primary font-semibold">$312K</p>
               </div>
               <div className="flex -space-x-2">
-                <img
+                <Image
                   alt="Contact"
                   className="h-6 w-6 rounded-full border border-background object-cover"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfWeNO02udyB8IibqdMeQcVriDh2xboFZoErlFaMI_WGyxUWlHXTiQjyahrK1veJxgSF215ykZd9VQrZc7iYVsuoidy0FVKiV6UHqKVLs92OsA8x8l_RRbATIj6r_2YzGWiXWY9gXI12cRx1Lk2h8EKCXo31nN9pbbdSiLxpew3HurdzKx5WB_tdW2HS3vMHGtkAvx79nLNXEOQtyX3wa1VnOVpUCG8Drc4wXwtT69lDh2ec5lFUnh1q9mQ3FwsNPT1raaDz_yt5I"
+                  width={24}
+                  height={24}
+                  unoptimized
                 />
-                <img
+                <Image
                   alt="Contact"
                   className="h-6 w-6 rounded-full border border-background object-cover"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqIePJMiJf2-hPS_KPL5nNmAuoQLko00BpofojPDtzwBqCSUwKWupje1IpgCV_9Xb6CqEoryO8d5E4P7hVouSbdtVBSCkk8FeEuMlWeKOspGVn3h4M3MIkBCMzQQioGX23CYTvOnDNvCxuSCN4pw_5c5eVUsS3WfCovULwg8V-duncjoNsquXFBTAWCdJWh8rtI_bORQAVvVb0mL-h0KEgCgBYre6E9S7Rw-6gM7P6cbwio5tbeN0t7T7H-Pw06DWoYgWyQ4u3OPQ"
+                  width={24}
+                  height={24}
+                  unoptimized
                 />
               </div>
             </div>
@@ -442,10 +458,13 @@ export default function ClientsPage() {
                           </td>
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-2">
-                              <img
+                              <Image
                                 alt={client.contactName}
                                 className="h-6 w-6 rounded-full object-cover"
                                 src={client.contactAvatar}
+                                width={24}
+                                height={24}
+                                unoptimized
                               />
                               <span className="text-on-surface text-body-sm">
                                 {client.contactName}
@@ -509,10 +528,13 @@ export default function ClientsPage() {
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 rounded-lg bg-primary flex items-center justify-center overflow-hidden">
-                    <img
+                    <Image
                       alt={activeClient.name}
                       className="w-full h-full object-cover"
                       src={activeClient.insightAvatar}
+                      width={56}
+                      height={56}
+                      unoptimized
                     />
                   </div>
                   <div>
