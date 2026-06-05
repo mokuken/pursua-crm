@@ -11,6 +11,7 @@ const Sidebar = () => {
     { href: "/projects", label: "Projects", icon: "work" },
     { href: "/tasks", label: "Tasks", icon: "check_circle" },
     { href: "/reports", label: "Reports", icon: "assessment" },
+    { href: "/payments", label: "Payments", icon: "payments" },
     { href: "/team", label: "Team", icon: "badge" },
     { href: "/notes", label: "Notes", icon: "description" },
     { href: "/files", label: "Files", icon: "folder" },
