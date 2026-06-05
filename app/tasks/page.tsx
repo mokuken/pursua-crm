@@ -19,12 +19,19 @@ interface Task {
   attachmentsCount?: number;
 }
 
+const clientsLookup = [
+  { id: "nebula-softworks", name: "Nebula Softworks" },
+  { id: "vertex-media", name: "Vertex Media" },
+  { id: "optic-prime", name: "Optic Prime" },
+  { id: "flow-logistics", name: "Flow Logistics" },
+];
+
 const projectLookup = [
-  { id: "proj-1", name: "Quantum Infrastructure" },
-  { id: "proj-2", name: "Helius Branding" },
-  { id: "proj-3", name: "Atlas API v2" },
-  { id: "proj-4", name: "Apex Dashboard" },
-  { id: "proj-5", name: "Project Phoenix" },
+  { id: "proj-1", name: "Quantum Infrastructure", clientId: "nebula-softworks" },
+  { id: "proj-2", name: "Helius Branding", clientId: "nebula-softworks" },
+  { id: "proj-3", name: "Atlas API v2", clientId: "vertex-media" },
+  { id: "proj-4", name: "Apex Dashboard", clientId: "optic-prime" },
+  { id: "proj-5", name: "Project Phoenix", clientId: "flow-logistics" },
 ];
 
 const teamMembers = [
@@ -121,6 +128,13 @@ export default function TasksPage() {
   const [newDueDate, setNewDueDate] = useState("OCT 30");
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>([]);
 
+  const [selectedClientId, setSelectedClientId] = useState("");
+  const [selectedProjectId, setSelectedProjectId] = useState("");
+
+  const filteredProjectOptions = selectedClientId
+    ? projectLookup.filter((p) => p.clientId === selectedClientId)
+    : projectLookup;
+
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
   const toggleAssignee = (memberId: string) => {
@@ -158,10 +172,20 @@ export default function TasksPage() {
 
   const filteredTasks = tasks.filter((task) => {
     const q = searchQuery.toLowerCase();
-    return task.title.toLowerCase().includes(q) ||
+    const matchesSearch = task.title.toLowerCase().includes(q) ||
       task.description.toLowerCase().includes(q) ||
       task.status.toLowerCase().includes(q) ||
       task.projectName.toLowerCase().includes(q);
+    if (!matchesSearch) return false;
+
+    if (selectedClientId) {
+      const proj = projectLookup.find((p) => p.id === task.projectId);
+      if (!proj || proj.clientId !== selectedClientId) return false;
+    }
+
+    if (selectedProjectId && task.projectId !== selectedProjectId) return false;
+
+    return true;
   });
 
   const getTasksByStatus = (status: "TO DO" | "IN PROGRESS" | "IN REVIEW" | "DONE") =>
@@ -224,6 +248,34 @@ export default function TasksPage() {
         />
 
         <div className="pt-24 px-margin-desktop pb-12 w-full flex-1 max-w-container-max mx-auto">
+
+          {/* Client & Project Filters */}
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-2">
+              <select
+                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 py-2 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px]"
+                value={selectedClientId}
+                onChange={(e) => { setSelectedClientId(e.target.value); setSelectedProjectId(""); }}
+              >
+                <option value="">All Clients</option>
+                {clientsLookup.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <select
+                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 py-2 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px]"
+                value={selectedProjectId}
+                onChange={(e) => setSelectedProjectId(e.target.value)}
+              >
+                <option value="">All Projects</option>
+                {filteredProjectOptions.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
 
           {/* BOARD VIEW */}
           {activeView === "board" && (
