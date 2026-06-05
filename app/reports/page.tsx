@@ -122,12 +122,7 @@ export default function ReportsPage() {
           searchPlaceholder="Search analytics..."
           searchValue={searchQuery}
           onSearchChange={setSearchQuery}
-          actions={
-            <button className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps flex items-center hover:bg-primary-fixed-dim transition-all active:scale-95 cursor-pointer shadow-md">
-              <span className="material-symbols-outlined mr-1.5 text-[18px]">download</span>
-              Export
-            </button>
-          }
+          actions={<></>}
         />
 
         <div className="pt-24 px-margin-desktop pb-12 w-full flex-1 max-w-container-max mx-auto space-y-gutter">

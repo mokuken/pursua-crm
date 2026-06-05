@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
@@ -140,6 +140,7 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("All");
+  const [selectedClientFilter, setSelectedClientFilter] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -205,17 +206,15 @@ export default function ProjectsPage() {
       proj.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       proj.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       proj.clientName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = statusFilter === "All" || proj.status === statusFilter;
-    return matchesSearch && matchesFilter;
-  });
+    if (!matchesSearch) return false;
 
-  const activeCount = projects.filter((p) => p.status === "In Progress").length;
-  const holdCount = projects.filter((p) => p.status === "On Hold").length;
-  const completedCount = projects.filter((p) => p.status === "Completed").length;
-  const averageProgress = projects.length
-    ? Math.round(projects.reduce((acc, curr) => acc + curr.progress, 0) / projects.length)
-    : 0;
-  const totalValue = projects.reduce((acc, p) => acc + p.value, 0);
+    const matchesStatus = statusFilter === "All" || proj.status === statusFilter;
+    if (!matchesStatus) return false;
+
+    if (selectedClientFilter && proj.clientId !== selectedClientFilter) return false;
+
+    return true;
+  });
 
   const formatCurrency = (val: number) =>
     new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(val);
@@ -245,74 +244,53 @@ export default function ProjectsPage() {
       <main className="ml-[240px] min-h-screen bg-background w-[calc(100%-240px)] flex flex-col relative">
         <Header
           title="Projects"
-          searchPlaceholder="Search projects, clients..."
-          searchValue={searchQuery}
-          onSearchChange={setSearchQuery}
-          actions={
-            <button onClick={() => setIsModalOpen(true)} className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps flex items-center hover:bg-primary-fixed-dim transition-all active:scale-95 cursor-pointer shadow-md">
-              <span className="material-symbols-outlined mr-1.5 text-[18px]">add</span>
-              New Project
-            </button>
-          }
+          actions={<></>}
         />
 
         <div className="pt-24 px-margin-desktop pb-12 max-w-container-max mx-auto w-full flex-1">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center gap-2 border-b border-outline-variant/30 pb-1">
-              {["All", "In Progress", "On Hold", "Completed"].map((tab) => (
-                <button key={tab} onClick={() => setStatusFilter(tab)}
-                  className={`px-3 py-1.5 text-body-sm font-semibold rounded-t-lg border-b-2 transition-all cursor-pointer ${
-                    statusFilter === tab ? "border-primary text-primary bg-surface-container-highest/20" : "border-transparent text-outline hover:text-on-surface hover:bg-surface-container/20"
-                  }`}>
-                  {tab}
-                </button>
+          <div className="flex items-center gap-4 mb-6">
+            <select
+              className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px] h-[36px]"
+              value={selectedClientFilter}
+              onChange={(e) => setSelectedClientFilter(e.target.value)}
+            >
+              <option value="">All Clients</option>
+              {clientsLookup.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
               ))}
+            </select>
+            <select
+              className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px] h-[36px]"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="All">All Statuses</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <div className="ml-auto bg-surface-container border border-outline-variant/30 px-3 rounded-lg flex items-center w-64 h-[36px] group focus-within:border-primary/50 transition-all">
+              <span className="material-symbols-outlined text-outline mr-2 text-[18px]">search</span>
+              <input
+                className="bg-transparent border-none text-body-sm text-on-surface placeholder:text-outline focus:ring-0 w-full p-0 text-[13px] outline-none"
+                placeholder="Search projects, clients..."
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="text-outline hover:text-primary ml-1">
+                  <span className="material-symbols-outlined text-sm">close</span>
+                </button>
+              )}
             </div>
-            <div className="font-label-caps text-label-caps text-outline">Showing {filteredProjects.length} of {projects.length} Projects</div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-gutter mb-10">
-            <div className="bg-surface-container border border-outline-variant/30 p-6 rounded-xl flex flex-col justify-between h-32 hover:border-outline-variant/60 transition-colors">
-              <span className="font-label-caps text-label-caps text-outline uppercase tracking-wider">Active Projects</span>
-              <div className="flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-primary">{activeCount}</span>
-                <span className="text-tertiary-fixed text-body-sm font-medium flex items-center">+12% <span className="material-symbols-outlined text-[16px] ml-0.5">trending_up</span></span>
-              </div>
-            </div>
-            <div className="bg-surface-container border border-outline-variant/30 p-6 rounded-xl flex flex-col justify-between h-32 hover:border-outline-variant/60 transition-colors">
-              <span className="font-label-caps text-label-caps text-outline uppercase tracking-wider">Workload Avg.</span>
-              <div className="flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-primary">{averageProgress}%</span>
-                <span className="text-outline text-body-sm font-medium">Optimal</span>
-              </div>
-            </div>
-            <div className="bg-surface-container border border-outline-variant/30 p-6 rounded-xl flex flex-col justify-between h-32 hover:border-outline-variant/60 transition-colors">
-              <span className="font-label-caps text-label-caps text-outline uppercase tracking-wider">On Hold List</span>
-              <div className="flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-primary">0{holdCount}</span>
-                <span className="text-error text-body-sm font-medium flex items-center">-{holdCount} <span className="material-symbols-outlined text-[16px] ml-0.5">priority_high</span></span>
-              </div>
-            </div>
-            <div className="bg-surface-container border border-outline-variant/30 p-6 rounded-xl flex flex-col justify-between h-32 hover:border-outline-variant/60 transition-colors">
-              <span className="font-label-caps text-label-caps text-outline uppercase tracking-wider">Completed</span>
-              <div className="flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-primary">0{completedCount}</span>
-                <span className="text-tertiary-fixed text-body-sm font-medium flex items-center">Active</span>
-              </div>
-            </div>
-            <div className="bg-surface-container border border-outline-variant/30 p-6 rounded-xl flex flex-col justify-between h-32 hover:border-outline-variant/60 transition-colors">
-              <span className="font-label-caps text-label-caps text-outline uppercase tracking-wider">Total Value</span>
-              <div className="flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-primary">{formatCurrency(totalValue)}</span>
-                <span className="text-secondary-fixed-dim text-body-sm font-medium flex items-center">Portfolio</span>
-              </div>
-            </div>
-          </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
             {filteredProjects.map((proj) => {
               const coords = mouseCoords[proj.id] || { x: 0, y: 0 };
-              const budgetPercent = proj.budget > 0 ? Math.round((proj.spent / proj.budget) * 100) : 0;
 
               return (
                 <div key={proj.id} onMouseMove={(e) => handleMouseMove(e, proj.id)}
@@ -358,31 +336,9 @@ export default function ProjectsPage() {
                       </div>
                     </div>
 
-                    {/* Budget tracker */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1.5">
-                        <span className="font-label-caps text-label-caps text-outline uppercase tracking-wider text-[9px]">Budget</span>
-                        <span className="font-label-caps text-label-caps text-[10px]"
-                          style={{ color: budgetPercent > 90 ? "#ffb4ab" : budgetPercent > 70 ? "#fbbf24" : "#e5e2e1" }}>
-                          {formatCurrency(proj.spent)} / {formatCurrency(proj.budget)}
-                        </span>
-                      </div>
-                      <div className="w-full bg-surface-container-highest/60 h-1 rounded-full overflow-hidden">
-                        <div className={`h-full transition-all duration-1000 ${budgetPercent > 90 ? "bg-error" : budgetPercent > 70 ? "bg-amber-500" : "bg-secondary"}`}
-                          style={{ width: `${Math.min(100, budgetPercent)}%` }} />
-                      </div>
-                    </div>
-
                     {/* Avatars and date */}
                     <div className="flex items-center justify-between pt-1">
-                      <div className="flex -space-x-1.5">
-                        {proj.avatars.map((url, index) => (
-                          <img key={index} className="w-7 h-7 rounded-full border-2 border-surface-container object-cover" src={url} alt="Team member" />
-                        ))}
-                        {proj.extraAvatarsCount ? (
-                          <div className="w-7 h-7 rounded-full border-2 border-surface-container bg-surface-container-highest flex items-center justify-center font-label-caps text-[9px] text-on-surface-variant font-semibold">+{proj.extraAvatarsCount}</div>
-                        ) : null}
-                      </div>
+                      <div />
                       <div className="flex items-center text-outline">
                         <span className="material-symbols-outlined text-[15px] mr-1">calendar_today</span>
                         <span className="font-label-caps text-label-caps text-[10px] tracking-wide">{proj.deadline}</span>

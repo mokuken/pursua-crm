@@ -83,12 +83,7 @@ const recentNotes = [
 export default function NotesPage() {
   const [search, setSearch] = useState("");
 
-  const headerActions = (
-    <button className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps flex items-center space-x-2 hover:opacity-90 active:scale-95 transition-all">
-      <span className="material-symbols-outlined text-[18px]">add</span>
-      <span>ADD NEW</span>
-    </button>
-  );
+  const headerActions = <></>;
 
   return (
     <div className="flex flex-1 min-h-screen bg-background text-on-background select-none font-body-md relative">
@@ -304,7 +299,7 @@ export default function NotesPage() {
 
         {/* Create FAB */}
         <button
-          className="fixed bottom-8 right-8 h-14 w-14 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-xl active:scale-95 transition-all hover:rotate-90 group z-50"
+          className="fixed bottom-8 right-8 h-14 w-14 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-xl active:scale-95 transition-all group z-50"
           title="Create New Note"
         >
           <span className="material-symbols-outlined text-[32px] font-bold">add</span>

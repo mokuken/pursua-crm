@@ -217,34 +217,7 @@ export default function TasksPage() {
       <main className="ml-[240px] min-h-screen bg-background w-[calc(100%-240px)] flex flex-col relative">
         <Header
           title="Tasks"
-          searchPlaceholder="Search tasks, projects..."
-          searchValue={searchQuery}
-          onSearchChange={setSearchQuery}
-          actions={
-            <>
-              <div className="flex bg-surface-container border border-outline-variant/30 p-0.5 rounded-lg mr-2">
-                <button onClick={() => setActiveView("board")}
-                  className={`px-3 py-1.5 rounded-md flex items-center transition-all cursor-pointer ${
-                    activeView === "board" ? "bg-surface-container-highest text-primary font-semibold" : "text-outline hover:text-primary"
-                  }`}>
-                  <span className="material-symbols-outlined text-[16px] mr-1">dashboard</span>
-                  <span className="font-label-caps text-label-caps text-[9px]">Board</span>
-                </button>
-                <button onClick={() => setActiveView("list")}
-                  className={`px-3 py-1.5 rounded-md flex items-center transition-all cursor-pointer ${
-                    activeView === "list" ? "bg-surface-container-highest text-primary font-semibold" : "text-outline hover:text-primary"
-                  }`}>
-                  <span className="material-symbols-outlined text-[16px] mr-1">list</span>
-                  <span className="font-label-caps text-label-caps text-[9px]">List</span>
-                </button>
-              </div>
-              <button onClick={() => setIsModalOpen(true)}
-                className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps flex items-center hover:bg-primary-fixed-dim transition-all active:scale-95 cursor-pointer shadow-md">
-                <span className="material-symbols-outlined mr-1.5 text-[18px]">add</span>
-                Add New
-              </button>
-            </>
-          }
+          actions={<></>}
         />
 
         <div className="pt-24 px-margin-desktop pb-12 w-full flex-1 max-w-container-max mx-auto">
@@ -253,7 +226,7 @@ export default function TasksPage() {
           <div className="flex items-center gap-4 mb-6">
             <div className="flex items-center gap-2">
               <select
-                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 py-2 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px]"
+                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px] h-[36px]"
                 value={selectedClientId}
                 onChange={(e) => { setSelectedClientId(e.target.value); setSelectedProjectId(""); }}
               >
@@ -265,7 +238,7 @@ export default function TasksPage() {
             </div>
             <div className="flex items-center gap-2">
               <select
-                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 py-2 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px]"
+                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px] h-[36px]"
                 value={selectedProjectId}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
               >
@@ -274,6 +247,37 @@ export default function TasksPage() {
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
               </select>
+            </div>
+            <div className="flex bg-surface-container border border-outline-variant/30 rounded-lg h-[36px]">
+              <button onClick={() => setActiveView("board")}
+                className={`px-3 flex items-center transition-all cursor-pointer rounded-l-lg ${
+                  activeView === "board" ? "bg-surface-container-highest text-primary font-semibold" : "text-outline hover:text-primary"
+                }`}>
+                <span className="material-symbols-outlined text-[16px] mr-1">dashboard</span>
+                <span className="font-label-caps text-label-caps text-[9px]">Board</span>
+              </button>
+              <button onClick={() => setActiveView("list")}
+                className={`px-3 flex items-center transition-all cursor-pointer rounded-r-lg ${
+                  activeView === "list" ? "bg-surface-container-highest text-primary font-semibold" : "text-outline hover:text-primary"
+                }`}>
+                <span className="material-symbols-outlined text-[16px] mr-1">list</span>
+                <span className="font-label-caps text-label-caps text-[9px]">List</span>
+              </button>
+            </div>
+            <div className="ml-auto bg-surface-container border border-outline-variant/30 px-3 rounded-lg flex items-center w-64 h-[36px] group focus-within:border-primary/50 transition-all">
+              <span className="material-symbols-outlined text-outline mr-2 text-[18px]">search</span>
+              <input
+                className="bg-transparent border-none text-body-sm text-on-surface placeholder:text-outline focus:ring-0 w-full p-0 text-[13px] outline-none"
+                placeholder="Search tasks, projects..."
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="text-outline hover:text-primary ml-1">
+                  <span className="material-symbols-outlined text-sm">close</span>
+                </button>
+              )}
             </div>
           </div>
 

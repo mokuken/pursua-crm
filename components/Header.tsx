@@ -53,7 +53,13 @@ const Header: React.FC<HeaderProps> = ({
           <span className="material-symbols-outlined">notifications</span>
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-secondary rounded-full" />
         </button>
-        
+
+        <img
+          alt="Profile"
+          className="w-8 h-8 rounded-full object-cover border border-outline-variant cursor-pointer hover:opacity-80 transition-opacity"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiqh8aB8UjCnM2dRZQnTzIpVHkSl4hi5lqtK6839E8jcfdji_tYl3FWiJRJiK-YCm85q8CjmzkoANcLZs8UgsKzie9tyHHe3D8sHEZAs3rar0_nU9uIZApimiVFLRvwNMTEC-jU-1hspReK9NQD8ZVVw5b8g6Symlj1kJ2wODj8naivxZDRKXFmazKqSoQBwopIxHgrlu8rGz5sjmh4_4bfdxDLrsD69NkLniSkh9WV1igPRIjGJ9WA_MuxBd5wIBIIApepAQ0_q8"
+        />
+
         {actions}
       </div>
     </header>

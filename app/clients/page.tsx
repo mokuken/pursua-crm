@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
@@ -142,27 +142,6 @@ export default function ClientsPage() {
     );
   });
 
-  const glowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent, element: HTMLDivElement) => {
-      const rect = element.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      element.style.setProperty("--mouse-x", `${x}px`);
-      element.style.setProperty("--mouse-y", `${y}px`);
-    };
-    const cleanupFuncs = glowRefs.current.map((element) => {
-      if (!element) return () => {};
-      const handler = (e: MouseEvent) => handleMouseMove(e, element);
-      element.addEventListener("mousemove", handler);
-      return () => element.removeEventListener("mousemove", handler);
-    });
-    return () => cleanupFuncs.forEach((cleanup) => cleanup());
-  }, [clients]);
-
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(val);
-
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     if (!newName.trim()) newErrors.name = "Client name is required";
@@ -189,91 +168,50 @@ export default function ClientsPage() {
 
       <Header
         title="Clients"
-        searchPlaceholder="Search clients, industries..."
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        actions={
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps flex items-center hover:bg-primary-fixed-dim transition-all active:scale-95 cursor-pointer shadow-md"
-          >
-            <span className="material-symbols-outlined mr-1.5 text-[18px]">add</span>
-            Add New
-          </button>
-        }
+        actions={<></>}
       />
 
       <main className="ml-[240px] min-h-screen bg-background w-[calc(100%-240px)] flex flex-col relative">
         <div className="pt-24 px-margin-desktop pb-12 w-full flex-1 max-w-container-max mx-auto space-y-6">
 
-          {/* Featured Clients Bento Grid */}
+          {/* Client Stats Bento Grid */}
           <section className="grid grid-cols-3 gap-6">
-            <div ref={(el) => { glowRefs.current[0] = el; }} className="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-300 group cursor-default">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
-                    <span className="material-symbols-outlined text-primary">rocket_launch</span>
-                  </div>
-                  <span className="bg-tertiary-container/10 text-on-tertiary-container px-2 py-0.5 rounded text-[10px] font-label-caps uppercase border border-tertiary-container/20">High Value</span>
+            <div className="bg-surface-container-low border border-outline-variant rounded-xl p-5 hover:border-primary transition-all duration-300 group cursor-default">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+                  <span className="material-symbols-outlined text-primary">check_circle</span>
                 </div>
-                <h3 className="font-headline-md text-headline-md text-primary">Lumos Grid</h3>
-                <p className="text-on-surface-variant text-body-sm mt-1">Renewable Energy</p>
+                <span className="bg-tertiary-container/10 text-on-tertiary-container px-2 py-0.5 rounded text-[10px] font-label-caps uppercase border border-tertiary-container/20">Active</span>
               </div>
-              <div className="mt-6 flex items-center justify-between border-t border-outline-variant pt-4">
-                <div>
-                  <p className="text-on-surface-variant text-[10px] uppercase font-label-caps">Account Value</p>
-                  <p className="text-primary font-semibold">₱840K</p>
-                </div>
-                <div className="flex -space-x-2">
-                  <Image alt="Contact" className="h-6 w-6 rounded-full border border-background object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHw91rVA4tXNeHndD1yUqrfydNgCOEh1ohKb4HlcyT94nZtDdawpEC-FfuS107xMGl39DWW50CNMQv0YmRalvTvWxPsRAwTlh-pcBO5haXaFPVz69KduPLx6XzjRN28FwBvhDqCR7CYWv6lnYybt6lgV5C_zSkSIFLYfaRd1ZtSrYp80kfwKNItIMJBuvZUQl8YCCWWlk_knfJYHGTTlMVmWEAxSuEGeQBU6S8F1EljBYZ1v_RMMWdbHhti_ikZPWCCnaKdyyq_kg" width={24} height={24} unoptimized />
-                  <div className="h-6 w-6 rounded-full bg-surface-container-highest border border-background flex items-center justify-center text-[8px] text-primary">+1</div>
-                </div>
+              <div className="flex items-end justify-between">
+                <p className="text-on-surface-variant text-body-sm">Total Active Clients</p>
+                <h3 className="text-[32px] leading-none text-primary font-bold">{clients.filter((c) => c.status === "Active").length}</h3>
               </div>
             </div>
 
-            <div ref={(el) => { glowRefs.current[1] = el; }} className="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-300 group cursor-default">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
-                    <span className="material-symbols-outlined text-primary">electric_bolt</span>
-                  </div>
-                  <span className="bg-secondary-container/10 text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-label-caps uppercase border border-secondary-container/20">Active Now</span>
+            <div className="bg-surface-container-low border border-outline-variant rounded-xl p-5 hover:border-primary transition-all duration-300 group cursor-default">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+                  <span className="material-symbols-outlined text-primary">pending</span>
                 </div>
-                <h3 className="font-headline-md text-headline-md text-primary">Lumos Grid</h3>
-                <p className="text-on-surface-variant text-body-sm mt-1">Renewable Energy</p>
+                <span className="bg-secondary-container/10 text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-label-caps uppercase border border-secondary-container/20">Pending</span>
               </div>
-              <div className="mt-6 flex items-center justify-between border-t border-outline-variant pt-4">
-                <div>
-                  <p className="text-on-surface-variant text-[10px] uppercase font-label-caps">Account Value</p>
-                  <p className="text-primary font-semibold">₱840K</p>
-                </div>
-                <div className="flex -space-x-2">
-                  <Image alt="Contact" className="h-6 w-6 rounded-full border border-background object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHw91rVA4tXNeHndD1yUqrfydNgCOEh1ohKb4HlcyT94nZtDdawpEC-FfuS107xMGl39DWW50CNMQv0YmRalvTvWxPsRAwTlh-pcBO5haXaFPVz69KduPLx6XzjRN28FwBvhDqCR7CYWv6lnYybt6lgV5C_zSkSIFLYfaRd1ZtSrYp80kfwKNItIMJBuvZUQl8YCCWWlk_knfJYHGTTlMVmWEAxSuEGeQBU6S8F1EljBYZ1v_RMMWdbHhti_ikZPWCCnaKdyyq_kg" width={24} height={24} unoptimized />
-                  <div className="h-6 w-6 rounded-full bg-surface-container-highest border border-background flex items-center justify-center text-[8px] text-primary">+1</div>
-                </div>
+              <div className="flex items-end justify-between">
+                <p className="text-on-surface-variant text-body-sm">Negotiation / Pending</p>
+                <h3 className="text-[32px] leading-none text-primary font-bold">{clients.filter((c) => c.status === "Negotiation" || c.status === "Pending").length}</h3>
               </div>
             </div>
 
-            <div ref={(el) => { glowRefs.current[2] = el; }} className="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-300 group cursor-default">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
-                    <span className="material-symbols-outlined text-primary">neurology</span>
-                  </div>
-                  <span className="bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-label-caps uppercase border border-outline-variant">New Client</span>
+            <div className="bg-surface-container-low border border-outline-variant rounded-xl p-5 hover:border-primary transition-all duration-300 group cursor-default">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="h-12 w-12 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+                  <span className="material-symbols-outlined text-primary">block</span>
                 </div>
-                <h3 className="font-headline-md text-headline-md text-primary">Synapse AI</h3>
-                <p className="text-on-surface-variant text-body-sm mt-1">Technology</p>
+                <span className="bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-label-caps uppercase border border-outline-variant">Dormant</span>
               </div>
-              <div className="mt-6 flex items-center justify-between border-t border-outline-variant pt-4">
-                <div>
-                  <p className="text-on-surface-variant text-[10px] uppercase font-label-caps">Account Value</p>
-                  <p className="text-primary font-semibold">₱312K</p>
-                </div>
-                <div className="flex -space-x-2">
-                  <Image alt="Contact" className="h-6 w-6 rounded-full border border-background object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfWeNO02udyB8IibqdMeQcVriDh2xboFZoErlFaMI_WGyxUWlHXTiQjyahrK1veJxgSF215ykZd9VQrZc7iYVsuoidy0FVKiV6UHqKVLs92OsA8x8l_RRbATIj6r_2YzGWiXWY9gXI12cRx1Lk2h8EKCXo31nN9pbbdSiLxpew3HurdzKx5WB_tdW2HS3vMHGtkAvx79nLNXEOQtyX3wa1VnOVpUCG8Drc4wXwtT69lDh2ec5lFUnh1q9mQ3FwsNPT1raaDz_yt5I" width={24} height={24} unoptimized />
-                  <Image alt="Contact" className="h-6 w-6 rounded-full border border-background object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqIePJMiJf2-hPS_KPL5nNmAuoQLko00BpofojPDtzwBqCSUwKWupje1IpgCV_9Xb6CqEoryO8d5E4P7hVouSbdtVBSCkk8FeEuMlWeKOspGVn3h4M3MIkBCMzQQioGX23CYTvOnDNvCxuSCN4pw_5c5eVUsS3WfCovULwg8V-duncjoNsquXFBTAWCdJWh8rtI_bORQAVvVb0mL-h0KEgCgBYre6E9S7Rw-6gM7P6cbwio5tbeN0t7T7H-Pw06DWoYgWyQ4u3OPQ" width={24} height={24} unoptimized />
-                </div>
+              <div className="flex items-end justify-between">
+                <p className="text-on-surface-variant text-body-sm">Dormant Clients</p>
+                <h3 className="text-[32px] leading-none text-primary font-bold">{clients.filter((c) => c.status === "Dormant").length}</h3>
               </div>
             </div>
           </section>
@@ -283,17 +221,22 @@ export default function ClientsPage() {
             <div className="col-span-8 bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden flex flex-col justify-between">
               <div>
                 <div className="p-5 border-b border-outline-variant flex items-center justify-between">
-                  <h2 className="font-headline-md text-headline-md text-primary">All Accounts</h2>
-                  <div className="flex gap-4">
-                    <div className="text-body-sm flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-green-500"></span>
-                      <span className="text-on-surface-variant">Active</span>
-                    </div>
-                    <div className="text-body-sm flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-amber-500"></span>
-                      <span className="text-on-surface-variant">Pending / Negotiation</span>
-                    </div>
+                  <div className="bg-surface-container border border-outline-variant/30 px-3 rounded-lg flex items-center w-64 h-[36px] group focus-within:border-primary/50 transition-all">
+                    <span className="material-symbols-outlined text-outline mr-2 text-[18px]">search</span>
+                    <input
+                      className="bg-transparent border-none text-body-sm text-on-surface placeholder:text-outline focus:ring-0 w-full p-0 text-[13px] outline-none"
+                      placeholder="Search clients, industries..."
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                   </div>
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="bg-primary text-on-primary rounded-lg flex items-center justify-center hover:bg-primary-fixed-dim transition-all active:scale-95 cursor-pointer shadow-md h-[36px] w-[36px]"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">add</span>
+                  </button>
                 </div>
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-surface-container text-on-surface-variant">
@@ -301,7 +244,6 @@ export default function ClientsPage() {
                       <th className="px-5 py-3 font-label-caps text-label-caps uppercase">Company</th>
                       <th className="px-5 py-3 font-label-caps text-label-caps uppercase">Contact Person</th>
                       <th className="px-5 py-3 font-label-caps text-label-caps uppercase">Status</th>
-                      <th className="px-5 py-3 font-label-caps text-label-caps uppercase text-right">Value</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant">
@@ -333,12 +275,11 @@ export default function ClientsPage() {
                                 : "bg-blue-500/10 text-blue-400 border-blue-500/20"
                               }`}>{client.status}</span>
                             </td>
-                            <td className="px-5 py-4 text-right text-primary font-semibold">{formatCurrency(client.value)}</td>
                           </tr>
                         );
                       })
                     ) : (
-                      <tr><td colSpan={4} className="px-5 py-8 text-center text-on-surface-variant">No accounts match your search query.</td></tr>
+                      <tr><td colSpan={3} className="px-5 py-8 text-center text-on-surface-variant">No accounts match your search query.</td></tr>
                     )}
                   </tbody>
                 </table>
