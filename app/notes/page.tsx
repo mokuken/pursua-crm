@@ -223,75 +223,81 @@ export default function NotesPage() {
                 </div>
               </div>
               
-              <div className="masonry-grid">
-                {recentNotes.map((note) => (
-                  <div
-                    key={note.id}
-                    className={`masonry-item ${
-                      note.size === "lg" ? "masonry-item-lg" : note.size === "sm" ? "masonry-item-sm" : ""
-                    } bg-surface-container border border-outline-variant p-5 rounded-xl hover:border-outline hover:-translate-y-0.5 transition-all cursor-pointer flex flex-col group relative overflow-hidden`}
-                  >
-                    {note.borderTop && (
-                      <div className="absolute top-0 left-0 w-full h-1 bg-error/40"></div>
-                    )}
-                    <h4 className="font-bold text-body-md mb-2">{note.title}</h4>
-                    {note.content && (
-                      <p className={`text-body-sm text-on-surface-variant whitespace-pre-line ${note.size === "lg" ? "" : "line-clamp-4"}`}>
-                        {note.content}
-                      </p>
-                    )}
-                    
-                    {note.expenses && (
-                      <div className="space-y-1 mt-2">
-                        {note.expenses.map((exp, idx) => (
-                          <div key={idx} className="flex justify-between text-body-sm">
-                            <span className="text-on-surface-variant">{exp.label}</span>
-                            <span className="font-label-caps">{exp.amount}</span>
-                          </div>
-                        ))}
-                        <div className="flex justify-between text-body-sm border-t border-outline-variant mt-2 pt-1 font-bold">
-                          <span>Total</span>
-                          <span className="font-label-caps">{note.total}</span>
+              <div className="grid grid-cols-3 gap-6 items-start">
+                {(() => {
+                  const cols: (typeof recentNotes)[] = [[], [], []];
+                  recentNotes.forEach((note, i) => cols[i % 3].push(note));
+                  return cols.map((col, colIdx) => (
+                    <div key={colIdx} className="space-y-4">
+                      {col.map((note) => (
+                        <div
+                          key={note.id}
+                          className="bg-surface-container border border-outline-variant p-5 rounded-xl hover:border-outline hover:-translate-y-0.5 transition-all cursor-pointer group relative"
+                        >
+                          {note.borderTop && (
+                            <div className="absolute top-0 left-0 w-full h-1 bg-error/40"></div>
+                          )}
+                          <h4 className="font-bold text-body-md mb-2">{note.title}</h4>
+                          {note.content && (
+                            <p className="text-body-sm text-on-surface-variant whitespace-pre-line">
+                              {note.content}
+                            </p>
+                          )}
+                          
+                          {note.expenses && (
+                            <div className="space-y-1 mt-3">
+                              {note.expenses.map((exp, idx) => (
+                                <div key={idx} className="flex justify-between text-body-sm">
+                                  <span className="text-on-surface-variant">{exp.label}</span>
+                                  <span className="font-label-caps">{exp.amount}</span>
+                                </div>
+                              ))}
+                              <div className="flex justify-between text-body-sm border-t border-outline-variant mt-2 pt-1 font-bold">
+                                <span>Total</span>
+                                <span className="font-label-caps">{note.total}</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {note.tags && (
+                            <div className="pt-4 flex items-center space-x-2">
+                              {note.tags.map((tag) => (
+                                <span key={tag} className="px-1.5 py-0.5 bg-surface-container-high text-[9px] rounded font-label-caps">
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+
+                          {note.attachment && (
+                            <div className="pt-4 flex items-center text-[10px] font-label-caps text-outline">
+                              <span className="material-symbols-outlined text-[14px] mr-1">link</span>
+                              Attachment: {note.attachment}
+                            </div>
+                          )}
+
+                          {note.date && !note.tags && !note.attachment && (
+                            <div className="pt-4 text-[10px] font-label-caps text-outline">
+                              {note.date}
+                            </div>
+                          )}
+
+                          {note.status && (
+                            <div className="pt-4">
+                              <span className="text-[10px] font-label-caps text-error">{note.status}</span>
+                            </div>
+                          )}
+
+                          {note.category && (
+                            <div className="pt-4 font-label-caps text-[10px] text-on-secondary-container">
+                              {note.category}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )}
-
-                    {note.tags && (
-                      <div className="mt-auto pt-4 flex items-center space-x-2">
-                        {note.tags.map((tag) => (
-                          <span key={tag} className="px-1.5 py-0.5 bg-surface-container-high text-[9px] rounded font-label-caps">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {note.attachment && (
-                      <div className="mt-auto pt-4 flex items-center text-[10px] font-label-caps text-outline">
-                        <span className="material-symbols-outlined text-[14px] mr-1">link</span>
-                        Attachment: {note.attachment}
-                      </div>
-                    )}
-
-                    {note.date && !note.tags && !note.attachment && (
-                      <div className="mt-auto pt-4 text-[10px] font-label-caps text-outline">
-                        {note.date}
-                      </div>
-                    )}
-
-                    {note.status && (
-                      <div className="mt-auto pt-4">
-                        <span className="text-[10px] font-label-caps text-error">{note.status}</span>
-                      </div>
-                    )}
-
-                    {note.category && (
-                      <div className="mt-auto pt-4 font-label-caps text-[10px] text-on-secondary-container">
-                        {note.category}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      ))}
+                    </div>
+                  ));
+                })()}
               </div>
             </section>
           </div>

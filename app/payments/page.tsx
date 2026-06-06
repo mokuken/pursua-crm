@@ -77,7 +77,9 @@ const initialPayments: Payment[] = [
 export default function PaymentsPage() {
   const [payments] = useState<Payment[]>(initialPayments);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("All");
+  const [selectedClientFilter, setSelectedClientFilter] = useState("");
+  const [selectedProjectFilter, setSelectedProjectFilter] = useState("");
+  const [selectedMethodFilter, setSelectedMethodFilter] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [newProjectName, setNewProjectName] = useState("");
@@ -86,18 +88,31 @@ export default function PaymentsPage() {
   const [newPaymentMethod, setNewPaymentMethod] = useState("Bank Transfer");
   const [newNotes, setNewNotes] = useState("");
 
-  const totalProjectValue = payments.reduce((sum, p) => sum + p.totalValue, 0);
-  const totalPaid = payments.reduce((sum, p) => sum + p.amountPaid, 0);
-  const totalOutstanding = payments.reduce((sum, p) => sum + p.outstanding, 0);
-  const overdueAmount = payments.filter((p) => p.status === "Overdue").reduce((sum, p) => sum + p.outstanding, 0);
-
   const filteredPayments = payments.filter((p) => {
+    if (selectedClientFilter && p.clientName !== selectedClientFilter) return false;
+    if (selectedProjectFilter && p.projectName !== selectedProjectFilter) return false;
+    if (selectedMethodFilter && p.paymentMethod !== selectedMethodFilter) return false;
     const matchesSearch =
       p.projectName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.clientName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = statusFilter === "All" || p.status === statusFilter;
-    return matchesSearch && matchesFilter;
+    return matchesSearch;
   });
+
+  const allTotalProjectValue = payments.reduce((sum, p) => sum + p.totalValue, 0);
+  const allTotalPaid = payments.reduce((sum, p) => sum + p.amountPaid, 0);
+  const allTotalOutstanding = payments.reduce((sum, p) => sum + p.outstanding, 0);
+  const overdueAmount = payments.filter((p) => p.status === "Overdue").reduce((sum, p) => sum + p.outstanding, 0);
+
+  const totalProjectValue = filteredPayments.reduce((sum, p) => sum + p.totalValue, 0);
+  const totalPaid = filteredPayments.reduce((sum, p) => sum + p.amountPaid, 0);
+  const totalOutstanding = filteredPayments.reduce((sum, p) => sum + p.outstanding, 0);
+
+  const uniqueClients = [...new Set(payments.map((p) => p.clientName))];
+  const clientFilteredPayments = selectedClientFilter
+    ? payments.filter((p) => p.clientName === selectedClientFilter)
+    : payments;
+  const uniqueProjects = [...new Set(clientFilteredPayments.map((p) => p.projectName))];
+  const uniqueMethods = [...new Set(payments.map((p) => p.paymentMethod))];
 
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -122,21 +137,7 @@ export default function PaymentsPage() {
       <Sidebar />
 
       <main className="ml-[240px] min-h-screen bg-background w-[calc(100%-240px)] flex flex-col relative">
-        <Header
-          title="Payments"
-          searchPlaceholder="Search by project or client..."
-          searchValue={searchQuery}
-          onSearchChange={setSearchQuery}
-          actions={
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps flex items-center hover:bg-primary-fixed-dim transition-all active:scale-95 cursor-pointer shadow-md"
-            >
-              <span className="material-symbols-outlined mr-1.5 text-[18px]">add</span>
-              Record Payment
-            </button>
-          }
-        />
+        <Header title="Payments" />
 
         <div className="pt-24 px-margin-desktop pb-12 w-full flex-1 max-w-container-max mx-auto space-y-6">
           {/* Summary Cards */}
@@ -144,21 +145,21 @@ export default function PaymentsPage() {
             <div className="bg-surface-container-low border border-outline-variant p-6 rounded-xl flex flex-col justify-between hover:bg-surface-container transition-colors">
               <span className="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Project Value</span>
               <div className="mt-2 flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-primary">{formatCurrency(totalProjectValue)}</span>
+                <span className="font-headline-lg text-headline-lg text-primary">{formatCurrency(allTotalProjectValue)}</span>
                 <span className="material-symbols-outlined text-primary-fixed-dim">account_balance</span>
               </div>
             </div>
             <div className="bg-surface-container-low border border-outline-variant p-6 rounded-xl flex flex-col justify-between hover:bg-surface-container transition-colors">
               <span className="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Paid</span>
               <div className="mt-2 flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-tertiary-fixed">{formatCurrency(totalPaid)}</span>
+                <span className="font-headline-lg text-headline-lg text-tertiary-fixed">{formatCurrency(allTotalPaid)}</span>
                 <span className="material-symbols-outlined text-tertiary-fixed">check_circle</span>
               </div>
             </div>
             <div className="bg-surface-container-low border border-outline-variant p-6 rounded-xl flex flex-col justify-between hover:bg-surface-container transition-colors">
               <span className="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Outstanding</span>
               <div className="mt-2 flex items-end justify-between">
-                <span className="font-headline-lg text-headline-lg text-secondary-fixed-dim">{formatCurrency(totalOutstanding)}</span>
+                <span className="font-headline-lg text-headline-lg text-secondary-fixed-dim">{formatCurrency(allTotalOutstanding)}</span>
                 <span className="material-symbols-outlined text-secondary-fixed-dim">hourglass_bottom</span>
               </div>
             </div>
@@ -172,20 +173,58 @@ export default function PaymentsPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex items-center gap-2 border-b border-outline-variant/30 pb-1">
-            {["All", "Paid", "Partially Paid", "Pending", "Overdue"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setStatusFilter(tab)}
-                className={`px-3 py-1.5 text-body-sm font-semibold rounded-t-lg border-b-2 transition-all cursor-pointer ${
-                  statusFilter === tab
-                    ? "border-primary text-primary bg-surface-container-highest/20"
-                    : "border-transparent text-outline hover:text-on-surface hover:bg-surface-container/20"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="flex items-center gap-4">
+            <select
+              className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px] h-[36px]"
+              value={selectedClientFilter}
+              onChange={(e) => setSelectedClientFilter(e.target.value)}
+            >
+              <option value="">All Clients</option>
+              {uniqueClients.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <select
+              className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px] h-[36px]"
+              value={selectedProjectFilter}
+              onChange={(e) => setSelectedProjectFilter(e.target.value)}
+            >
+              <option value="">All Projects</option>
+              {uniqueProjects.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+            <select
+              className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 text-body-sm text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer min-w-[180px] h-[36px]"
+              value={selectedMethodFilter}
+              onChange={(e) => setSelectedMethodFilter(e.target.value)}
+            >
+              <option value="">All Methods</option>
+              {uniqueMethods.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="ml-auto bg-primary text-on-primary rounded-lg flex items-center justify-center hover:bg-primary-fixed-dim transition-all active:scale-95 cursor-pointer shadow-md w-[36px] h-[36px]"
+            >
+              <span className="material-symbols-outlined text-[20px]">add</span>
+            </button>
+            <div className="bg-surface-container border border-outline-variant/30 px-3 rounded-lg flex items-center w-64 h-[36px] group focus-within:border-primary/50 transition-all">
+              <span className="material-symbols-outlined text-outline mr-2 text-[18px]">search</span>
+              <input
+                className="bg-transparent border-none text-body-sm text-on-surface placeholder:text-outline focus:ring-0 w-full p-0 text-[13px] outline-none"
+                placeholder="Search projects, clients..."
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="text-outline hover:text-primary ml-1">
+                  <span className="material-symbols-outlined text-sm">close</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Payment Table */}
@@ -194,8 +233,8 @@ export default function PaymentsPage() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-surface-container border-b border-outline-variant">
-                    <th className="px-5 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Project</th>
                     <th className="px-5 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Client</th>
+                    <th className="px-5 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Project</th>
                     <th className="px-5 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Total Value</th>
                     <th className="px-5 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Amount Paid</th>
                     <th className="px-5 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Outstanding</th>
@@ -208,10 +247,10 @@ export default function PaymentsPage() {
                   {filteredPayments.length > 0 ? (
                     filteredPayments.map((payment) => (
                       <tr key={payment.id} className="hover:bg-surface-container-high transition-colors cursor-pointer">
+                        <td className="px-5 py-4 text-on-surface-variant">{payment.clientName}</td>
                         <td className="px-5 py-4">
                           <span className="text-primary font-medium">{payment.projectName}</span>
                         </td>
-                        <td className="px-5 py-4 text-on-surface-variant">{payment.clientName}</td>
                         <td className="px-5 py-4 text-right text-primary font-semibold">{formatCurrency(payment.totalValue)}</td>
                         <td className="px-5 py-4 text-right text-tertiary-fixed font-semibold">{formatCurrency(payment.amountPaid)}</td>
                         <td className="px-5 py-4 text-right text-error font-semibold">{formatCurrency(payment.outstanding)}</td>
@@ -232,6 +271,15 @@ export default function PaymentsPage() {
                     </tr>
                   )}
                 </tbody>
+                <tfoot>
+                  <tr className="bg-surface-container border-t-2 border-outline-variant font-semibold">
+                    <td className="px-5 py-4 text-on-surface-variant" colSpan={2}>Totals</td>
+                    <td className="px-5 py-4 text-right text-primary">{formatCurrency(totalProjectValue)}</td>
+                    <td className="px-5 py-4 text-right text-tertiary-fixed">{formatCurrency(totalPaid)}</td>
+                    <td className="px-5 py-4 text-right text-error">{formatCurrency(totalOutstanding)}</td>
+                    <td className="px-5 py-4" colSpan={3}></td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>

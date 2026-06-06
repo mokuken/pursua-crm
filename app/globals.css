@@ -99,22 +99,4 @@ body {
   border-radius: 10px;
 }
 
-/* Masonry Grid for Notes */
-.masonry-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  grid-auto-rows: 10px;
-  gap: 16px;
-}
 
-.masonry-item {
-  grid-row-end: span 22;
-}
-
-.masonry-item-lg {
-  grid-row-end: span 32;
-}
-
-.masonry-item-sm {
-  grid-row-end: span 18;
-}
