@@ -435,7 +435,7 @@ export default function ClientsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block font-label-caps text-label-caps text-outline uppercase tracking-wider mb-1">Status</label>
-                  <select className="w-full bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-body-md text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer" value={newStatus} onChange={(e) => setNewStatus(e.target.value as any)}>
+                  <select className="w-full bg-surface-container border border-outline-variant rounded-lg px-3 py-2 text-body-md text-primary focus:outline-none focus:border-primary/50 transition-colors cursor-pointer" value={newStatus} onChange={(e) => setNewStatus(e.target.value as "Active" | "Negotiation" | "Dormant" | "Pending")}>
                     <option value="Active">Active</option>
                     <option value="Negotiation">Negotiation</option>
                     <option value="Dormant">Dormant</option>
